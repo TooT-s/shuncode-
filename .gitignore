@@ -1,0 +1,56 @@
+# ============================================================================
+# ShunCode 源码归档仓库 —— 仅收录第一方源码
+# ============================================================================
+# 本目录同时是 ShunCode 的完整安装目录（约 1.1 GB），其中大部分内容属于
+# Electron / Chromium 运行时、Code - OSS 内核编译产物与第三方组件。
+# 本仓库只收录 ShunCode 第一方源码、构建产物与必要文档，
+# 因此采用「先整体忽略、再逐项放行」的白名单策略。
+# ============================================================================
+
+# ---- 根目录：只放行仓库元文件与命令行入口 ----
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/bin/
+
+# ---- resources/：只放行 app/ 子目录 ----
+!/resources/
+/resources/*
+!/resources/app/
+
+# ---- resources/app/：放行第一方扩展目录与元数据文档 ----
+/resources/app/*
+!/resources/app/extensions/
+!/resources/app/package.json
+!/resources/app/product.json
+!/resources/app/LICENSE.txt
+!/resources/app/ThirdPartyNotices.txt
+!/resources/app/SHUNCODE_CHANGELOG.md
+!/resources/app/SHUNCODE_CHANGELOG_SHORT.md
+
+# ---- extensions/：仅放行 shuncode 第一方扩展 ----
+/resources/app/extensions/*
+!/resources/app/extensions/shuncode/
+
+# ---- shuncode 扩展：放行源码、构建产物、测试与静态资源 ----
+/resources/app/extensions/shuncode/*
+!/resources/app/extensions/shuncode/src/
+!/resources/app/extensions/shuncode/dist/
+!/resources/app/extensions/shuncode/test/
+!/resources/app/extensions/shuncode/agents/
+!/resources/app/extensions/shuncode/media/
+!/resources/app/extensions/shuncode/package.json
+!/resources/app/extensions/shuncode/tsconfig.json
+
+# ============================================================================
+# 以下内容已被上述白名单覆盖（未纳入版本控制），列出供参考：
+#   ShunCode.exe / *.dll / *.pak / locales/        Electron 与 Chromium 运行时（约 330 MB）
+#   resources/app/out/                             Code - OSS 内核编译产物（106 MB）
+#   resources/app/node_modules.asar(.unpacked)     内核依赖归档（138 MB）
+#   resources/app/extensions/shuncode/runtime/     捆绑的 git / uv 运行时（433 MB）
+#   resources/app/extensions/shuncode/vendor/      PSReadLine（微软第三方组件）
+#   其余 96 个内置扩展                               来自 Microsoft Code - OSS（约 51 MB）
+#   LICENSES.chromium.html                         Chromium 第三方许可证（19.5 MB）
+#   unins*.*                                       安装器卸载程序
+# ============================================================================
