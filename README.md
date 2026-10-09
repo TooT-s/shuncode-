@@ -12,6 +12,18 @@ ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的
 | 目标平台 | Windows x64 |
 | 许可证 | MIT |
 
+## 如何获取
+
+| 方式 | 入口 |
+| --- | --- |
+| **下载 ZIP（推荐，免装 Git）** | [Releases](https://github.com/TooT-s/shuncode-/releases) 页面 → 下载 `shuncode-v0.8.1-source.zip`，或直接点该版本的 **Source code (zip)** |
+| 固定版本直链 | https://github.com/TooT-s/shuncode-/archive/refs/tags/v0.8.1.zip |
+| 克隆仓库（完整历史） | `git clone https://github.com/TooT-s/shuncode-.git` |
+| 克隆指定版本 | `git clone -b v0.8.1 --depth 1 https://github.com/TooT-s/shuncode-.git` |
+
+> 仓库体积很小（约 4.5 MB），包含全部 99 个源码与文档文件，克隆/下载都不需要额外依赖。
+> 解压后即为本仓库的完整目录树，可直接用编辑器打开阅读源码。
+
 ## 目录结构
 
 ```
