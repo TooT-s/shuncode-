@@ -2,7 +2,7 @@
 
 ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的 Electron 集成开发环境。
 
-本仓库收录 **ShunCode 第一方源码**，即作为产品核心的 `shuncode` 内置扩展（原生 Chat / Agent 集成层）的完整 TypeScript 源码、构建产物与配套文档。
+本仓库收录 **ShunCode 的源码与核心实现**：作为产品核心的 `shuncode` 第一方扩展的完整 TypeScript 源码，以及 Code - OSS 内核的编译产物、运行时依赖与配套文档。
 
 | 项目 | 信息 |
 | --- | --- |
@@ -11,6 +11,7 @@ ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的
 | 内核构建号 | `5c03086397d13f66eb8c46dc97043a91d9e97c9f` |
 | 目标平台 | Windows x64 |
 | 许可证 | MIT |
+| 仓库体积 | 约 130 MB（约 1060 个文件） |
 
 ## 如何获取
 
@@ -19,10 +20,9 @@ ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的
 | **下载 ZIP（推荐，免装 Git）** | [Releases](https://github.com/TooT-s/shuncode-/releases) 页面 → 下载 `shuncode-v0.8.1-source.zip`，或直接点该版本的 **Source code (zip)** |
 | 固定版本直链 | https://github.com/TooT-s/shuncode-/archive/refs/tags/v0.8.1.zip |
 | 克隆仓库（完整历史） | `git clone https://github.com/TooT-s/shuncode-.git` |
-| 克隆指定版本 | `git clone -b v0.8.1 --depth 1 https://github.com/TooT-s/shuncode-.git` |
+| 克隆指定版本（浅克隆） | `git clone -b v0.8.1 --depth 1 https://github.com/TooT-s/shuncode-.git` |
 
-> 仓库体积很小（约 4.5 MB），包含全部 99 个源码与文档文件，克隆/下载都不需要额外依赖。
-> 解压后即为本仓库的完整目录树，可直接用编辑器打开阅读源码。
+> 解压后即为本仓库的完整目录树，可直接用编辑器打开阅读源码；内核部分为**未压缩的可读 JavaScript**，无需构建即可阅读。
 
 ## 目录结构
 
@@ -36,6 +36,22 @@ ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的
 │   ├── ThirdPartyNotices.txt                # 第三方组件声明
 │   ├── SHUNCODE_CHANGELOG.md                # 完整变更日志
 │   ├── SHUNCODE_CHANGELOG_SHORT.md          # 简要变更日志
+│   ├── resources/                           # 应用图标与 UI 资源
+│   ├── node_modules/                        # 内核运行时依赖包（@vscode/*、zod 等）
+│   ├── out/                                 # ★ Code - OSS 内核编译产物（115 MB）
+│   │   ├── main.js                          # Electron 主进程入口
+│   │   ├── cli.js                           # 命令行入口
+│   │   ├── bootstrap-fork.js                # 子进程引导
+│   │   ├── nls.*.json / nls.messages.js     # 多语言（NLS）资源
+│   │   ├── media/                           # 启动画面等静态资源
+│   │   ├── vscode-dts/                      # 扩展 API 类型定义（.d.ts）
+│   │   └── vs/                              # 内核主体
+│   │       ├── base/                        # 基础工具库
+│   │       ├── platform/                    # 平台抽象层（依赖注入、命令、配置…）
+│   │       ├── editor/                      # Monaco 编辑器内核
+│   │       ├── workbench/                   # 工作台（界面、视图、贡献点…）
+│   │       ├── sessions/                    # 会话视图（ShunCode 定制模块）
+│   │       └── code/                        # 桌面端入口
 │   └── extensions/shuncode/                 # ★ 第一方扩展
 │       ├── src/                             # TypeScript 源码（68 个文件）
 │       ├── dist/                            # 构建产物（extension.js 等 7 个文件）
@@ -47,7 +63,7 @@ ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的
 └── README.md
 ```
 
-## src/ 源码模块概览
+## 源码模块概览
 
 `resources/app/extensions/shuncode/src/` 共 68 个文件（57 个 `.ts`、10 个 `.mts`、1 个 `.js`），按功能大致分为：
 
@@ -67,16 +83,25 @@ ShunCode —— 基于 Microsoft **Code - OSS**（Visual Studio Code）构建的
 
 > `src/` 中 `.mts` 为 ESM 模块，`.ts` 为常规 TypeScript 模块。
 
+## 内核部分说明
+
+`resources/app/out/` 为 Code - OSS 内核的**编译产物**（上游未提供 TypeScript 源码，此即发行版中的实现形态）：
+
+- 代码为**未压缩、可读**的 JavaScript，保留了原始模块划分与注释结构，可直接阅读与检索
+- `vs/base` → `vs/platform` → `vs/editor` → `vs/workbench` → `vs/code` 构成自底向上的分层架构
+- `vs/sessions/` 为 ShunCode 相对上游 Code - OSS 的定制模块
+- 体积最大的两个 bundle 为工作台与会话视图：`workbench.desktop.main.js`（37 MB）、`sessions.desktop.main.js`（38 MB）
+- 不含 sourcemap（发行版未附带）
+
 ## 未收录内容
 
 本目录中以下内容**未**纳入版本控制（规则见 [`.gitignore`](.gitignore)）：
 
 | 内容 | 体积 | 说明 |
 | --- | --- | --- |
-| `ShunCode.exe` 及 `.dll` / `.pak` / `locales/` 等 | 约 330 MB | Electron 与 Chromium 运行时 |
-| `resources/app/out/` | 106 MB | Code - OSS 内核编译产物 |
-| `resources/app/node_modules.asar(.unpacked)` | 138 MB | 内核依赖归档 |
-| `resources/app/extensions/shuncode/runtime/` | 433 MB | 捆绑的 git / uv 运行时 |
+| `ShunCode.exe` 及 `.dll` / `.pak` / `locales/` 等 | 约 330 MB | Electron 与 Chromium 运行时（二进制） |
+| `resources/app/node_modules.asar(.unpacked)` | 138 MB | 依赖打包归档，与 `node_modules/` 内容重叠 |
+| `resources/app/extensions/shuncode/runtime/` | 433 MB | 捆绑的 git / uv 运行时（二进制） |
 | 其余 96 个内置扩展 | 约 51 MB | 来自 Microsoft Code - OSS |
 | `LICENSES.chromium.html` | 19.5 MB | Chromium 第三方许可证 |
 | `resources/app/extensions/shuncode/vendor/` | 653 KB | PSReadLine（微软第三方组件） |

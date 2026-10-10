@@ -19,9 +19,12 @@
 /resources/*
 !/resources/app/
 
-# ---- resources/app/：放行第一方扩展目录与元数据文档 ----
+# ---- resources/app/：放行第一方扩展、内核编译产物、依赖与资源 ----
 /resources/app/*
 !/resources/app/extensions/
+!/resources/app/out/
+!/resources/app/node_modules/
+!/resources/app/resources/
 !/resources/app/package.json
 !/resources/app/product.json
 !/resources/app/LICENSE.txt
@@ -46,9 +49,8 @@
 # ============================================================================
 # 以下内容已被上述白名单覆盖（未纳入版本控制），列出供参考：
 #   ShunCode.exe / *.dll / *.pak / locales/        Electron 与 Chromium 运行时（约 330 MB）
-#   resources/app/out/                             Code - OSS 内核编译产物（106 MB）
-#   resources/app/node_modules.asar(.unpacked)     内核依赖归档（138 MB）
-#   resources/app/extensions/shuncode/runtime/     捆绑的 git / uv 运行时（433 MB）
+#   resources/app/node_modules.asar(.unpacked)     内核依赖打包归档（138 MB，与 node_modules/ 内容重叠）
+#   resources/app/extensions/shuncode/runtime/     捆绑的 git / uv 运行时二进制（433 MB）
 #   resources/app/extensions/shuncode/vendor/      PSReadLine（微软第三方组件）
 #   其余 96 个内置扩展                               来自 Microsoft Code - OSS（约 51 MB）
 #   LICENSES.chromium.html                         Chromium 第三方许可证（19.5 MB）
